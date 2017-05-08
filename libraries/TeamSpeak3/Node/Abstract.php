@@ -191,25 +191,17 @@ abstract class TeamSpeak3_Node_Abstract implements RecursiveIterator, ArrayAcces
    */
   public function getViewer(TeamSpeak3_Viewer_Interface $viewer)
   {
-    $html = $viewer->fetchObject($this);
-
-    $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
-
-    foreach($iterator as $node)
-    {
-      $siblings = array();
-
-      for($level = 0; $level < $iterator->getDepth(); $level++)
-      {
-        $siblings[] = ($iterator->getSubIterator($level)->hasNext()) ? 1 : 0;
-      }
-
-      $siblings[] = (!$iterator->getSubIterator($level)->hasNext()) ? 1 : 0;
-
-      $html .= $viewer->fetchObject($node, $siblings);
-    }
-
-    return $html;
+        $server = $viewer->fetchObject($this);
+        
+        $iterator = new ULBuilder($this, RecursiveIteratorIterator::SELF_FIRST);
+        
+        $iterator->addToList($server);
+        
+        foreach($iterator as $node) {
+            $iterator->addToList($viewer->fetchObject($node));
+        }
+        
+        return $iterator->getList();
   }
 
   /**
