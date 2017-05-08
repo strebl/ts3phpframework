@@ -20,6 +20,6 @@
     "php": ">=5.2.1"
   },
   "autoload": {
-    "files": ["libraries/TeamSpeak3/TeamSpeak3.php"]
+    "classmap": ["libraries/"]
   }
 }
